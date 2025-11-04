@@ -1,138 +1,655 @@
 <!doctype html>
+
 <html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Porsche Residual — Fetch JSON</title>
+<title>Residual App — By Ricardo (11/25 Programs)</title>
 <style>
-  :root{
-    --bg:#0b1020; --card:#121932; --text:#e6ebff; --muted:#a8b3d1; --border:#233057;
-    --accent:#2ea66a; --chip:#243156; --chip-text:#cfe1ff; --danger:#ff5d5d;
-    --radius:14px; --shadow:0 10px 26px rgba(0,0,0,.28);
-  }
-  [data-theme="light"]{
-    --bg:#f6f7fb; --card:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e8ecf5;
-    --chip:#eef2ff; --chip-text:#2f2f91; --shadow:0 10px 26px rgba(16,24,40,.08);
-  }
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.45 -apple-system,BlinkMacSystemFont,Inter,Segoe UI,Roboto,system-ui,sans-serif}
-  .wrap{max-width:1040px;margin:20px auto;padding:0 14px}
-  .top{position:sticky;top:0;z-index:30;background:var(--bg);padding:10px 0 8px}
-  .brand{display:flex;gap:10px;align-items:center;justify-content:space-between}
-  .pill{display:inline-flex;align-items:center;gap:8px;background:var(--chip);color:var(--chip-text);padding:8px 12px;border-radius:999px;border:1px solid var(--border)}
-  .theme{border:1px solid var(--border);background:var(--chip);color:var(--chip-text);padding:8px 12px;border-radius:999px;cursor:pointer}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:14px}
-  .controls{position:sticky;top:56px;z-index:20}
-  .grid{display:grid;gap:10px}
-  .g3{grid-template-columns:repeat(3, minmax(0,1fr))}
-  .g2{grid-template-columns:repeat(2, minmax(0,1fr))}
-  @media (max-width:900px){.g3,.g2{grid-template-columns:1fr}}
-  label{font-size:.85rem;color:var(--muted);display:block;margin:0 0 6px}
-  select,input[type="number"],input[type="text"],button{width:100%;appearance:none;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:11px 12px}
-  select:focus,input:focus,button:focus{outline:2px solid var(--accent);outline-offset:0}
-  .rowline{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .switch{display:flex;align-items:center;gap:10px}
-  .muted{color:var(--muted)}
-  .hint{font-size:.8rem;color:var(--muted);margin-top:6px}
-  .warn{color:var(--danger);font-size:.86rem;margin-top:6px;display:none}
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-  .result{display:flex;align-items:baseline;gap:12px;margin-top:6px;flex-wrap:wrap}
-  .result .big{font-size:2.0rem;font-weight:800;letter-spacing:.25px}
-  .result .small{font-size:.95rem}
+:root{
+–bg:#0a0e1a;
+–bg-gradient: linear-gradient(135deg, #0a0e1a 0%, #1a1f35 100%);
+–card:#ffffff08;
+–card-hover:#ffffff12;
+–text:#e6ebff;
+–muted:#8b92b0;
+–border:#ffffff15;
+–accent:#3b82f6;
+–accent-hover:#2563eb;
+–accent-glow: rgba(59, 130, 246, 0.3);
+–chip:#1e293b;
+–chip-text:#cbd5e1;
+–danger:#ef4444;
+–success:#10b981;
+–radius:16px;
+–shadow:0 20px 50px rgba(0,0,0,.4);
+–glow: 0 0 20px var(–accent-glow);
+–badge:#1e293b;
+–badge-border:#334155;
+}
 
-  .tableWrap{margin-top:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:12px}
-  table{min-width:720px;width:100%;border-collapse:separate;border-spacing:0;background:var(--card)}
-  th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
-  thead th{font-size:.82rem;color:var(--muted);font-weight:600;position:sticky;top:0;background:var(--card);z-index:1}
-  tbody tr:last-child td{border-bottom:0}
-  td.ok{color:var(--accent);font-weight:600}
-  td.err{color:var(--danger)}
-  td:first-child, th:first-child{position:sticky;left:0;background:var(--card);z-index:2}
+[data-theme=“light”]{
+–bg:#f8fafc;
+–bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+–card:#ffffff;
+–card-hover:#f8fafc;
+–text:#0f172a;
+–muted:#64748b;
+–border:#e2e8f0;
+–accent:#3b82f6;
+–accent-hover:#2563eb;
+–accent-glow: rgba(59, 130, 246, 0.15);
+–chip:#f1f5f9;
+–chip-text:#475569;
+–shadow:0 20px 50px rgba(15,23,42,.08);
+–glow: 0 0 30px rgba(59, 130, 246, 0.1);
+–badge:#f1f5f9;
+–badge-border:#cbd5e1;
+}
+
+- { box-sizing: border-box; }
+
+html,body{
+margin:0;
+padding:0;
+background:var(–bg);
+background-image: var(–bg-gradient);
+background-attachment: fixed;
+color:var(–text);
+font:16px/1.6 ‘Inter’, -apple-system, BlinkMacSystemFont, sans-serif;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+
+.wrap{
+max-width:1200px;
+margin:0 auto;
+padding:20px 16px 40px;
+}
+
+/* Animated gradient background */
+body::before {
+content: ‘’;
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+height: 400px;
+background: radial-gradient(circle at 50% 0%, var(–accent-glow), transparent 60%);
+opacity: 0.4;
+pointer-events: none;
+z-index: 0;
+}
+
+.top{
+position:sticky;
+top:0;
+z-index:30;
+backdrop-filter: blur(20px) saturate(180%);
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: var(–radius);
+padding:16px 20px;
+margin-bottom: 24px;
+box-shadow: var(–shadow);
+animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+from { transform: translateY(-20px); opacity: 0; }
+to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.5; }
+}
+
+.brand{
+display:flex;
+gap:16px;
+align-items:center;
+justify-content:space-between;
+flex-wrap:wrap;
+}
+
+.pill{
+display:inline-flex;
+align-items:center;
+gap:10px;
+background: linear-gradient(135deg, var(–accent), var(–accent-hover));
+color:#fff;
+padding:12px 20px;
+border-radius:999px;
+font-weight:700;
+font-size:0.95rem;
+letter-spacing:0.3px;
+box-shadow: 0 4px 20px var(–accent-glow);
+transition: all 0.3s ease;
+}
+
+.pill:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 30px var(–accent-glow);
+}
+
+.theme{
+border:1px solid var(–border);
+background:var(–card);
+backdrop-filter: blur(10px);
+color:var(–text);
+padding:10px 18px;
+border-radius:999px;
+cursor:pointer;
+font-weight:600;
+transition: all 0.3s ease;
+font-family: ‘Inter’, sans-serif;
+}
+
+.theme:hover{
+background:var(–card-hover);
+border-color:var(–accent);
+transform: translateY(-2px);
+box-shadow: 0 4px 20px var(–accent-glow);
+}
+
+.card{
+background:var(–card);
+backdrop-filter: blur(20px) saturate(180%);
+border:1px solid var(–border);
+border-radius:var(–radius);
+box-shadow:var(–shadow);
+padding:24px;
+transition: all 0.3s ease;
+animation: fadeIn 0.5s ease;
+}
+
+.card:hover {
+border-color: var(–accent-glow);
+box-shadow: var(–shadow), var(–glow);
+}
+
+.controls{
+position:sticky;
+top:90px;
+z-index:20;
+}
+
+.grid{
+display:grid;
+gap:16px;
+}
+
+.g3{
+grid-template-columns:repeat(3, minmax(0,1fr));
+}
+
+.g2{
+grid-template-columns:repeat(2, minmax(0,1fr));
+}
+
+@media (max-width:900px){
+.g3,.g2{
+grid-template-columns:1fr;
+}
+}
+
+label{
+font-size:0.875rem;
+color:var(–muted);
+display:block;
+margin:0 0 8px;
+font-weight:600;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+select,input[type=“number”],input[type=“text”],button{
+width:100%;
+appearance:none;
+background:var(–bg);
+color:var(–text);
+border:1px solid var(–border);
+border-radius:12px;
+padding:12px 16px;
+font-family: ‘Inter’, sans-serif;
+font-size: 0.95rem;
+transition: all 0.3s ease;
+}
+
+select:focus,input:focus,button:focus{
+outline:none;
+border-color:var(–accent);
+box-shadow: 0 0 0 3px var(–accent-glow);
+background: var(–card);
+}
+
+select:hover,input:hover{
+border-color:var(–accent);
+}
+
+select {
+cursor: pointer;
+background-image: url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘16’ height=‘16’ viewBox=‘0 0 24 24’ fill=‘none’ stroke=’%233b82f6’ stroke-width=‘2’ stroke-linecap=‘round’ stroke-linejoin=‘round’%3E%3Cpolyline points=‘6 9 12 15 18 9’%3E%3C/polyline%3E%3C/svg%3E”);
+background-repeat: no-repeat;
+background-position: right 12px center;
+padding-right: 40px;
+}
+
+.rowline{
+display:flex;
+gap:12px;
+align-items:center;
+flex-wrap:wrap;
+}
+
+.muted{
+color:var(–muted);
+}
+
+.hint{
+font-size:0.8rem;
+color:var(–muted);
+margin-top:6px;
+font-weight: 500;
+}
+
+.warn{
+color:var(–danger);
+font-size:0.875rem;
+margin-top:8px;
+display:none;
+font-weight:600;
+padding: 8px 12px;
+background: rgba(239, 68, 68, 0.1);
+border-radius: 8px;
+}
+
+.searchWrap{
+max-width:360px;
+min-width:220px;
+}
+
+@media (max-width:900px){
+.searchWrap{
+max-width:100%;
+}
+}
+
+.result{
+display:flex;
+align-items:baseline;
+gap:16px;
+margin-bottom:24px;
+flex-wrap:wrap;
+padding: 20px;
+background: linear-gradient(135deg, var(–accent-glow), transparent);
+border-radius: 12px;
+border: 1px solid var(–border);
+}
+
+.result .big{
+font-size:3rem;
+font-weight:900;
+letter-spacing:0.5px;
+background: linear-gradient(135deg, var(–accent), var(–accent-hover));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+animation: fadeIn 0.5s ease;
+}
+
+.result .small{
+font-size:1rem;
+font-weight:500;
+}
+
+.tableWrap{
+margin-top:20px;
+overflow-x:auto;
+-webkit-overflow-scrolling:touch;
+border:1px solid var(–border);
+border-radius:12px;
+background: var(–bg);
+}
+
+table{
+min-width:720px;
+width:100%;
+border-collapse:separate;
+border-spacing:0;
+}
+
+th,td{
+padding:14px 16px;
+border-bottom:1px solid var(–border);
+text-align:left;
+white-space:nowrap;
+transition: all 0.2s ease;
+}
+
+thead th{
+font-size:0.8rem;
+color:var(–muted);
+font-weight:700;
+position:sticky;
+top:0;
+background:var(–card);
+backdrop-filter: blur(10px);
+z-index:1;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+tbody tr{
+transition: all 0.2s ease;
+}
+
+tbody tr:hover{
+background: var(–card-hover);
+}
+
+tbody tr:last-child td{
+border-bottom:0;
+}
+
+td.ok{
+color:var(–success);
+font-weight:700;
+font-variant-numeric: tabular-nums;
+}
+
+td.err{
+color:var(–danger);
+opacity: 0.5;
+}
+
+td:first-child, th:first-child{
+position:sticky;
+left:0;
+background:var(–card);
+backdrop-filter: blur(10px);
+z-index:2;
+font-weight: 600;
+}
+
+/* Enhanced Summary */
+.summary{
+margin-top:24px;
+padding:24px;
+border:1px solid var(–border);
+border-radius:var(–radius);
+background: var(–card);
+backdrop-filter: blur(20px);
+animation: fadeIn 0.6s ease;
+}
+
+.summary strong {
+font-size: 1.1rem;
+font-weight: 700;
+letter-spacing: 0.3px;
+}
+
+.sum-grid{
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:12px;
+margin-top:16px;
+}
+
+@media (max-width:700px){
+.sum-grid{
+grid-template-columns:1fr;
+}
+}
+
+.srow{
+display:flex;
+gap:12px;
+align-items:center;
+justify-content:space-between;
+background:var(–badge);
+border:1px solid var(–badge-border);
+border-radius:12px;
+padding:14px 16px;
+transition: all 0.3s ease;
+}
+
+.srow:hover {
+transform: translateX(4px);
+border-color: var(–accent);
+box-shadow: 0 4px 12px var(–accent-glow);
+}
+
+.slabel{
+font-weight:600;
+color: var(–muted);
+font-size: 0.9rem;
+}
+
+.sval{
+font-variant-numeric:tabular-nums;
+font-weight: 700;
+font-size: 1rem;
+}
+
+.badges{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:16px;
+}
+
+.badge{
+background: linear-gradient(135deg, var(–badge), var(–badge-border));
+border:1px solid var(–badge-border);
+padding:8px 16px;
+border-radius:999px;
+font-size:0.85rem;
+font-weight:600;
+transition: all 0.3s ease;
+animation: fadeIn 0.7s ease;
+}
+
+.badge:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 12px var(–accent-glow);
+}
+
+.copybtn{
+margin-left:auto;
+background: var(–accent);
+color: #fff;
+border-color: var(–accent);
+padding: 10px 20px;
+font-weight: 600;
+cursor: pointer;
+}
+
+.copybtn:hover{
+background: var(–accent-hover);
+transform: translateY(-2px);
+box-shadow: 0 4px 20px var(–accent-glow);
+}
+
+/* Checkbox styling */
+input[type=“checkbox”] {
+width: 20px;
+height: 20px;
+cursor: pointer;
+accent-color: var(–accent);
+}
+
+/* Footer */
+.footer{
+margin:32px 0 16px;
+}
+
+.foot-card{
+background:var(–card);
+backdrop-filter: blur(20px);
+border:1px solid var(–border);
+border-radius:var(–radius);
+box-shadow:var(–shadow);
+padding:20px 24px;
+animation: fadeIn 0.8s ease;
+}
+
+.foot-title{
+font-weight:800;
+letter-spacing:0.3px;
+margin-bottom:8px;
+font-size: 1.1rem;
+}
+
+.foot-text{
+color:var(–muted);
+font-size:0.92rem;
+line-height: 1.6;
+}
+
+/* Loading animation */
+@keyframes shimmer {
+0% { background-position: -1000px 0; }
+100% { background-position: 1000px 0; }
+}
+
+.loading {
+animation: shimmer 2s infinite;
+background: linear-gradient(90deg, var(–card) 0%, var(–card-hover) 50%, var(–card) 100%);
+background-size: 1000px 100%;
+}
+
+/* Smooth transitions for theme switching */
+
+- {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+
+select, input, button, .card, .badge, .srow {
+transition: all 0.3s ease;
+}
 </style>
+
 </head>
 <body>
   <div class="wrap">
     <div class="top">
       <div class="brand">
-        <div class="pill">Porsche Residual — Fetch JSON</div>
-        <button id="themeBtn" class="theme" type="button">Light</button>
+        <div class="pill">✨ Residual App — By Ricardo (11/25 Programs)</div>
+        <button id="themeBtn" class="theme" type="button">🌙 Dark Mode</button>
       </div>
     </div>
 
-    <div class="card controls">
-      <!-- ORDER: Family → Year → Trim (search) → Miles@Inception → Miles/Year → PACPO → Term -->
-      <div class="grid g3">
-        <div>
-          <label>Model Family</label>
-          <select id="familySel"></select>
-        </div>
-        <div>
-          <label>Model Year</label>
-          <select id="yearSel"></select>
-        </div>
-        <div>
-          <label>Trim</label>
-          <select id="trimSel"></select>
-          <div class="hint" id="trimCount"></div>
-          <div class="warn" id="trimWarn">No trims found for this family/year. Check JSON spelling/case.</div>
-        </div>
-      </div>
+```
+<div class="card controls">
+  <div class="grid g3">
+    <div>
+      <label>🚗 Model Family</label>
+      <select id="familySel"></select>
+    </div>
+    <div>
+      <label>📅 Model Year</label>
+      <select id="yearSel"></select>
+    </div>
+    <div>
+      <label>🎯 Trim</label>
+      <select id="trimSel"></select>
+      <div class="hint" id="trimCount"></div>
+      <div class="warn" id="trimWarn">⚠️ No trims found for this family/year. Check JSON spelling/case.</div>
+    </div>
+  </div>
 
-      <div class="grid g3" style="margin-top:10px">
-        <div>
-          <label>Search Trim</label>
-          <input id="trimSearch" type="text" placeholder="Type to filter by name or code… (e.g. 992, 95B)" />
-        </div>
-        <div>
-          <label>Term (months)</label>
-          <select id="termSel"></select>
-        </div>
-        <div class="rowline" style="margin-top:22px">
-          <label class="switch">
-            <span>+2% PACPO</span>
-            <input id="pacpoToggle" type="checkbox" />
-          </label>
-          <label class="switch">
-            <span>Hide N/A Columns</span>
-            <input id="hideNA" type="checkbox" />
-          </label>
-          <div class="pill" id="codeBadge">MY Code: —</div>
-        </div>
-      </div>
+  <div class="grid g3" style="margin-top:16px">
+    <div class="searchWrap">
+      <label>🔍 Search Trim</label>
+      <input id="trimSearch" type="text" placeholder="Type to filter by name or code…" />
+    </div>
+    <div>
+      <label>⏱️ Term (months)</label>
+      <select id="termSel"></select>
+    </div>
+    <div class="rowline" style="margin-top:28px">
+      <label class="rowline" style="gap:8px;">
+        <input id="pacpoToggle" type="checkbox" />
+        <span>+2% PACPO</span>
+      </label>
+      <label class="rowline" style="gap:8px;">
+        <input id="hideNA" type="checkbox" />
+        <span>Hide N/A</span>
+      </label>
+      <div class="pill" id="codeBadge" style="font-size:0.85rem;padding:8px 14px;">MY Code: —</div>
+    </div>
+  </div>
 
-      <div class="grid g2" style="margin-top:10px">
-        <div>
-          <label>Miles at Inception (odometer)</label>
-          <input id="odoInput" type="number" min="0" step="1" placeholder="e.g., 3,450" />
-          <div class="hint">Summary shows this adjustment even when it’s +0%.</div>
-        </div>
-        <div>
-          <label>Miles per Year (24–60 mo)</label>
-          <select id="annualMilesSel"></select>
-        </div>
-      </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div>
+      <label>🛣️ Miles at Inception</label>
+      <input id="odoInput" type="number" min="0" step="1" placeholder="e.g., 3,450" />
+      <div class="hint">Summary shows this adjustment even when it's +0%.</div>
+    </div>
+    <div>
+      <label>📊 Miles per Year</label>
+      <select id="annualMilesSel"></select>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:20px">
+  <div class="result">
+    <div class="big" id="finalOut">—</div>
+    <div class="small muted" id="detailOut"></div>
+  </div>
+
+  <div class="tableWrap">
+    <table id="residualTable">
+      <thead><tr id="theadRow"></tr></thead>
+      <tbody><tr id="tvalRow"></tr></tbody>
+    </table>
+  </div>
+
+  <div class="summary" id="summaryBox">
+    <div class="rowline">
+      <strong>📋 Summary</strong>
+      <button id="copyBtn" class="theme copybtn" type="button">📄 Copy</button>
     </div>
 
-    <div class="card" style="margin-top:12px">
-      <div class="result">
-        <div class="big" id="finalOut">—</div>
-        <div class="small muted" id="detailOut"></div>
-      </div>
-
-      <div class="tableWrap">
-        <table id="residualTable">
-          <thead><tr id="theadRow"></tr></thead>
-          <tbody><tr id="tvalRow"></tr></tbody>
-        </table>
-      </div>
-
-      <div class="card" style="margin-top:12px">
-        <div class="rowline">
-          <strong>Summary</strong>
-          <button id="copyBtn" class="theme" style="margin-left:auto" type="button">Copy</button>
-        </div>
-        <div id="summaryText" class="muted" style="margin-top:8px"></div>
-      </div>
+    <div class="sum-grid">
+      <div class="srow"><span class="slabel">Model Year</span><span class="sval" id="sumYear">—</span></div>
+      <div class="srow"><span class="slabel">Family</span><span class="sval" id="sumFamily">—</span></div>
+      <div class="srow"><span class="slabel">Trim</span><span class="sval" id="sumTrim">—</span></div>
+      <div class="srow"><span class="slabel">Term</span><span class="sval" id="sumTerm">—</span></div>
+      <div class="srow"><span class="slabel">Miles/Year</span><span class="sval" id="sumMilesYear">—</span></div>
+      <div class="srow"><span class="slabel">Odometer</span><span class="sval" id="sumOdo">—</span></div>
     </div>
+
+    <div class="badges" id="badgeRow" aria-label="Adjustments"></div>
+    <div class="srow" style="margin-top:16px;border: 2px solid var(--accent);box-shadow: var(--glow);">
+      <span class="slabel" style="color: var(--accent);">Final Residual</span>
+      <span class="sval" id="sumFinal" style="font-size:1.3rem;color:var(--accent);">—</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="foot-card">
+    <div class="foot-title">💼 Made by Ricardo</div>
+    <div class="foot-text">
+      This tool is proprietary. Redistribution, copying, or use without Ricardo's explicit written consent is prohibited.
+      By viewing or using this app, you agree not to duplicate the data, design, or logic in any form.  
+      <strong>Ask first. Respect the craft.</strong>
+    </div>
+  </div>
+</div>
+```
+
   </div>
 
 <script>
@@ -141,12 +658,12 @@
   const themeBtn = document.getElementById('themeBtn');
   const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-  themeBtn.textContent = prefersDark ? 'Light' : 'Dark';
+  themeBtn.innerHTML = prefersDark ? '☀️ Light Mode' : '🌙 Dark Mode';
   themeBtn.addEventListener('click', ()=>{
     const cur = document.documentElement.getAttribute('data-theme');
     const next = cur === 'light' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', next);
-    themeBtn.textContent = next === 'light' ? 'Dark' : 'Light';
+    themeBtn.innerHTML = next === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
   });
 
   // ========= DOM HANDLES =========
@@ -166,14 +683,22 @@
   const tvalRow  = document.getElementById('tvalRow');
   const annualMilesSel = document.getElementById('annualMilesSel');
   const odoInput = document.getElementById('odoInput');
-  const summaryText = document.getElementById('summaryText');
+
+  // Summary fields
+  const sumYear = document.getElementById('sumYear');
+  const sumFamily = document.getElementById('sumFamily');
+  const sumTrim = document.getElementById('sumTrim');
+  const sumTerm = document.getElementById('sumTerm');
+  const sumMilesYear = document.getElementById('sumMilesYear');
+  const sumOdo = document.getElementById('sumOdo');
+  const sumFinal = document.getElementById('sumFinal');
+  const badgeRow = document.getElementById('badgeRow');
   const copyBtn = document.getElementById('copyBtn');
 
   // ========= FETCH JSON =========
-  // Default file name (same folder). You can override via ?data=filename.json
   const params = new URLSearchParams(location.search);
   const jsonFile = params.get('data') || 'porsche_residuals_all.json';
-  const cacheBuster = `v=${Date.now()}`; // force refresh on GH Pages
+  const cacheBuster = `v=${Date.now()}`;
   let data;
 
   try {
@@ -183,7 +708,7 @@
   } catch (err) {
     alert(`Failed to load JSON: ${err.message}.
 - Ensure ${jsonFile} exists in the same folder as this HTML
-- If using file://, most browsers block fetch; serve via GitHub Pages or a local server`);
+- If using file://, the browser may block fetch; use GitHub Pages or a local server`);
     throw err;
   }
   window.__data = data;
@@ -289,13 +814,13 @@
       opt.value = code; opt.textContent = model; opt.dataset.code = code;
       trimSel.appendChild(opt);
     });
-    trimCount.textContent = filtered.length ? `${filtered.length} trim(s)` : 'No trims match filter';
+    trimCount.textContent = filtered.length ? `${filtered.length} trim(s) available` : 'No trims match filter';
     trimWarn.style.display = filtered.length ? 'none' : 'block';
   }
   function populateTerms(){
     termSel.innerHTML = '';
     (data.months || ["12","18","24","27","30","36","39","42","48","51","60"]).forEach(m=>{
-      const opt = document.createElement('option'); opt.value=m; opt.textContent=`${m} mo`; termSel.appendChild(opt);
+      const opt = document.createElement('option'); opt.value=m; opt.textContent=`${m} months`; termSel.appendChild(opt);
     });
   }
   function populateAnnualMiles(){
@@ -333,9 +858,9 @@
   }
   function buildHeader(visibleMonths){
     theadRow.innerHTML = '';
-    const th1 = document.createElement('th'); th1.textContent = 'Trim / Term Table';
+    const th1 = document.createElement('th'); th1.textContent = 'Trim / Term';
     theadRow.appendChild(th1);
-    visibleMonths.forEach(m=>{ const th=document.createElement('th'); th.textContent=m; theadRow.appendChild(th); });
+    visibleMonths.forEach(m=>{ const th=document.createElement('th'); th.textContent=`${m} mo`; theadRow.appendChild(th); });
   }
   function visibleMonthsFor(entry){
     if(!hideNA.checked) return MONTHS.slice();
@@ -366,7 +891,6 @@
       annualAdj = milesMap[String(milesPerYear)] ?? 0;
     }
 
-    // Try raw MY key, then display (MY20), then no-space variant
     const inceptionKeyCandidates = [yrKey, dispYear, dispYear.replace(/\s+/g,'')];
     let inceptionAdj = 0;
     for (const cand of inceptionKeyCandidates) {
@@ -379,7 +903,7 @@
 
     const final = (base === null || term==null) ? null : (base + pacpoAdj + annualAdj + inceptionAdj);
     finalOut.textContent = final === null ? '—' : `${final}%`;
-    detailOut.textContent = final===null ? `Select a term` : `Final residual with all adjustments`;
+    detailOut.textContent = final===null ? `Select a term to calculate` : `Final residual with all adjustments applied`;
     codeBadge.textContent = `MY Code: ${code || '—'}`;
 
     // Table
@@ -399,40 +923,60 @@
       td.textContent = shown; tvalRow.appendChild(td);
     });
 
-    // Summary (always show inception when odo provided)
-    const parts = [];
-    if(base !== null && term) parts.push(`Base ${base}%`);
-    if(pacpoToggle.checked) parts.push(`${pacpoAdj>=0?'+':''}${pacpoAdj}% PACPO`);
-    if(term && parseInt(term,10) >= 24) parts.push(`${annualAdj>=0?'+':''}${annualAdj}% Annual Miles (${milesPerYear.toLocaleString()}/yr)`);
-    if(odo != null && !Number.isNaN(odo)) parts.push(`${inceptionAdj>=0?'+':''}${inceptionAdj}% Inception (${odo.toLocaleString()} mi)`);
+    // Summary
+    sumYear.textContent = dispYear || '—';
+    sumFamily.textContent = fam || '—';
+    sumTrim.textContent = entry?.model ?? '—';
+    sumTerm.textContent = term ? `${term} mo` : '—';
+    sumMilesYear.textContent = isFinite(milesPerYear) ? `${milesPerYear.toLocaleString()} mi/yr` : '—';
+    sumOdo.textContent = (odo!=null && !Number.isNaN(odo)) ? `${odo.toLocaleString()} mi` : '—';
 
-    const line1 = `${dispYear} • ${fam} • ${entry?.model ?? '—'} • ${term||'—'} mo`;
-    const line2 = (final===null) ? `N/A` : `Final Residual: ${final}%  (${parts.join('  |  ')})`;
-    summaryText.textContent = `${line1}\n${line2}`;
+    // Badges
+    badgeRow.innerHTML = '';
+    if (base !== null && term) {
+      const b = document.createElement('div'); b.className='badge'; b.textContent = `Base ${base}%`; badgeRow.appendChild(b);
+    }
+    if (pacpoToggle.checked){
+      const b = document.createElement('div'); b.className='badge'; b.textContent = `+${PACPO}% PACPO`; badgeRow.appendChild(b);
+    }
+    if (term && parseInt(term,10) >= 24){
+      const a = document.createElement('div'); a.className='badge';
+      const adj = annualAdj>=0?`+${annualAdj}%`:`${annualAdj}%`;
+      a.textContent = `${adj} Annual Miles`; badgeRow.appendChild(a);
+    }
+    if (odo != null && !Number.isNaN(odo)){
+      const i = document.createElement('div'); i.className='badge';
+      const adj = inceptionAdj>=0?`+${inceptionAdj}%`:`${inceptionAdj}%`;
+      i.textContent = `${adj} Inception`; badgeRow.appendChild(i);
+    }
+
+    sumFinal.textContent = final===null ? '—' : `${final}%`;
   }
 
   // ========= COPY =========
   copyBtn.addEventListener('click', ()=>{
-    const txt = summaryText.textContent || '';
-    navigator.clipboard.writeText(txt).then(()=>{
-      const old = copyBtn.textContent;
-      copyBtn.textContent = 'Copied!';
-      setTimeout(()=>copyBtn.textContent = old, 900);
+    const text = [
+      `Year: ${sumYear.textContent}`,
+      `Family: ${sumFamily.textContent}`,
+      `Trim: ${sumTrim.textContent}`,
+      `Term: ${sumTerm.textContent}`,
+      `Miles/Year: ${sumMilesYear.textContent}`,
+      `Odometer: ${sumOdo.textContent}`,
+      `Final Residual: ${sumFinal.textContent}`
+    ].join(' | ');
+    navigator.clipboard.writeText(text).then(()=>{
+      const old = copyBtn.innerHTML;
+      copyBtn.innerHTML = '✅ Copied!';
+      setTimeout(()=>copyBtn.innerHTML = old, 1200);
     });
   });
 
   // ========= INIT / EVENTS =========
   function init(){
-    // Populate controls
-    familySel.innerHTML = '';
     populateFamilies();
-    yearSel.innerHTML = '';
     populateYears();
-    termSel.innerHTML = '';
     populateTerms();
-    annualMilesSel.innerHTML = '';
     populateAnnualMiles();
-    // Trims
     collectTrimsForYear(); populateTrims();
     compute();
   }
@@ -450,5 +994,6 @@
   init();
 })();
 </script>
+
 </body>
 </html>
