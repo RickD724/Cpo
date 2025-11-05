@@ -35,6 +35,7 @@
     --glow: 0 0 20px var(--accent-glow);
     --badge: #1e293b;
     --badge-border: #334155;
+    --note: #b6a2ff; /* light purple accent for inline notes */
   }
   [data-theme="light"]{
     --bg: #f8fafc;
@@ -53,6 +54,7 @@
     --glow: 0 0 30px rgba(59, 130, 246, 0.1);
     --badge: #f1f5f9;
     --badge-border: #cbd5e1;
+    --note: #7c5cff; /* slightly deeper in light mode for contrast */
   }
 
   *{ box-sizing: border-box; margin: 0; padding: 0; }
@@ -62,7 +64,7 @@
     font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     min-height: 100%;
   }
-  .wrap{ max-width: 1200px; margin: 0 auto; padding: 20px 16px 80px; } /* extra bottom padding helps mobile scrolling */
+  .wrap{ max-width: 1200px; margin: 0 auto; padding: 20px 16px 80px; }
   body::before{ content:''; position:fixed; top:0; left:0; right:0; height:400px;
     background: radial-gradient(circle at 50% 0%, var(--accent-glow), transparent 60%); opacity:.35; pointer-events:none; z-index:0; }
 
@@ -92,7 +94,6 @@
     border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px;
   }
   .controls{ position: sticky; top: 60px; z-index: 20; }
-  /* MOBILE: disable sticky to avoid trapping the Summary */
   @media (max-width: 900px){
     .controls{ position: static; }
   }
@@ -122,7 +123,8 @@
   .result{ display:flex; align-items:baseline; gap:16px; margin:18px 0 14px; flex-wrap:wrap; padding:16px;
     background:linear-gradient(135deg, var(--accent-glow), transparent); border-radius:12px; border:1px solid var(--border); }
   .result .big{ font-size:2.3rem; font-weight:900; letter-spacing:.4px; background:linear-gradient(135deg,var(--accent),var(--accent-hover)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-  .result .small{ font-size:1rem; font-weight:600; }
+  .result .small{ font-size:1rem; font-weight:700; }
+  #trueOut{ color: var(--note); font-weight:700; } /* unified style + light purple */
 
   .tableWrap{ margin-top: 10px; overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--border); border-radius:12px; background:var(--bg); }
   table{ min-width:720px; width:100%; border-collapse:separate; border-spacing:0; }
@@ -135,7 +137,7 @@
   td:first-child, th:first-child{ position:sticky; left:0; background:var(--card); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:2; font-weight:800; }
 
   .summary{ margin-top: 16px; padding: 18px; border:1px solid var(--border); border-radius: var(--radius); background: var(--card);
-    scroll-margin-top: 80px; } /* when jumping to summary, avoid hiding under sticky top */
+    scroll-margin-top: 80px; }
   .sum-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:12px; }
   @media (max-width: 700px){ .sum-grid{ grid-template-columns:1fr; } }
   .srow{ display:flex; gap:12px; align-items:center; justify-content:space-between; background:var(--badge); border:1px solid var(--badge-border); border-radius:12px; padding:10px 12px; }
@@ -143,6 +145,13 @@
   .sval{ font-variant-numeric:tabular-nums; font-weight:800; font-size:1rem; }
   .badges{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
   .badge{ background:linear-gradient(135deg,var(--badge),var(--badge-border)); border:1px solid var(--badge-border); padding:6px 10px; border-radius:999px; font-size:.82rem; font-weight:800; }
+
+  /* subhint under the right-hand column in the grid (for LVI) */
+  .sum-subhint{
+    font-size: .8rem;
+    color: var(--muted);
+    padding-left: 6px;
+  }
 
   .footer{ margin:24px 0 12px; }
   .foot-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; }
@@ -244,7 +253,7 @@
       <div class="result">
         <div class="big" id="finalOut">-</div>
         <div class="small muted" id="detailOut">Select a term to calculate</div>
-        <div class="small" id="trueOut" style="font-weight:800;"></div>
+        <div class="small" id="trueOut"></div>
         <div class="small muted" id="lviBadge" style="font-weight:700;"></div>
       </div>
 
@@ -292,12 +301,16 @@
 
           <!-- Always shown -->
           <div class="srow"><span class="slabel">MSRP × RV%</span><span class="sval" id="sumTrue">-</span></div>
+
+          <!-- Lease Value Index with per-column helper -->
           <div class="srow">
             <span class="slabel">Lease Value Index</span>
-            <span class="sval" id="sumLvi" title="Higher is better — more residual per unit of rent charge.">-</span>
+            <span class="sval" id="sumLvi" title="The higher the Lease Value Index the better.">-</span>
+          </div>
+          <div class="sum-subhint" style="grid-column: 2 / 3; margin-top: -6px;">
+            <em>*The higher the Lease Value Index the better.</em>
           </div>
         </div>
-        <div class="hint" id="lviHelp">Higher is better — more residual per unit of rent charge.</div>
 
         <div class="badges" id="badgeRow" aria-label="Adjustments"></div>
       </div>
