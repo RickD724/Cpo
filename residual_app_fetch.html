@@ -722,7 +722,7 @@
     sumMsrp.textContent = (msrp != null && !isNaN(msrp)) ? ('$' + msrp.toLocaleString()) : '-';
     var trueResidual = (final != null && msrp != null && !isNaN(msrp)) ? Math.round(msrp * (final/100)) : null;
     sumTrue.textContent = (trueResidual != null) ? ('$' + trueResidual.toLocaleString()) : '-';
-    trueOut.textContent = (trueResidual != null) ? ('True Residual: $' + trueResidual.toLocaleString()) : '';
+    trueOut.textContent = (trueResidual != null) ? ('MSRP × RV% = $' + trueResidual.toLocaleString()) : '';
 
     // badges
     badgeRow.innerHTML = '';
